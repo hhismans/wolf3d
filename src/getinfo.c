@@ -6,14 +6,15 @@
 /*   By: hhismans <hhismans@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/24 11:58:03 by hhismans          #+#    #+#             */
-/*   Updated: 2014/12/01 21:35:28 by hhismans         ###   ########.fr       */
+/*   Updated: 2014/12/05 07:31:10 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "wolf.h"
 #include "libft.h"
 #include <fcntl.h>
 #include <unistd.h>
-#include "fdf.h"
+//#include "fdf.h"
 #include <math.h>
 #include <stdlib.h>
 
@@ -64,7 +65,7 @@ static int		fill_list(char *file, t_list **lst_line)
 	return (nbr_line);
 }
 
-int				**getinfo(t_env *e, char *file)
+int				**getinfo(int *nbr_line2, char *file)
 {
 	char	**tab_char;
 	int		nbr_line;
@@ -75,7 +76,7 @@ int				**getinfo(t_env *e, char *file)
 	i = 0;
 	nbr_line = fill_list(file, &lst_line);
 	tab_int = (int **)ft_taballoc(sizeof(int) * (nbr_line));
-	e->nbr_line = nbr_line;
+	*nbr_line2 = nbr_line;
 	while (lst_line)
 	{
 		tab_char = ft_strsplit((char *)lst_line->content, ' ');

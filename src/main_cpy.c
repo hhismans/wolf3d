@@ -6,7 +6,7 @@
 /*   By: hhismans <hhismans@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/12/02 17:55:47 by hhismans          #+#    #+#             */
-/*   Updated: 2014/12/05 04:25:11 by hhismans         ###   ########.fr       */
+/*   Updated: 2014/12/05 06:11:43 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,11 @@ double	DtR(int degre)
  */
 void	set_variable(t_player *player)
 {
-	player->pos.x = PLAYER_X;
-	player->pos.y = PLAYER_Y;
-	player->dir.x = DIR_X;
-	player->dir.y = DIR_Y;
+	player->pos.x = 220;
+	player->pos.y = 250;
+	player->dir.x = -1;
+	player->dir.y = 0;
 	player->plane.y = 0.66;//tan(DtR(FOV / 2)) * DIR_X;
-	printf("plnne y  =  %lf \n", player->plane.y);
 	player->plane.x = 0;
 }
 
@@ -41,7 +40,7 @@ int main (int argc, char **argv)
 {
 	t_point p1;
 	t_point p2;
-	t_vector	map;
+	t_point	map;
 	t_player	player;
 	t_ray		ray;
 	int			**map_info;
@@ -64,35 +63,35 @@ int main (int argc, char **argv)
 	ft_putnbr(map_info[3][15]);
 	while (i <= WINDOW_X)
 	{
-		screenX = 2 * (double)i / WINDOW_X - 1;
+		screenX = ((2 * i) / (double)512) - 1;
 		ray.pos.x = player.pos.x;
 		ray.pos.y = player.pos.y;
 		ray.dir.x = player.dir.x + player.plane.x * screenX;
 		ray.dir.y = player.dir.y + player.plane.y * screenX;
 
-		map.x = (int)(player.pos.x / BLOCK_SIZE);
-		map.y = (int)(player.pos.y / BLOCK_SIZE);
-		delta.x = sqrt(BLOCK_SIZE * BLOCK_SIZE + (ray.dir.x * ray.dir.x) / (ray.dir.y * ray.dir.y));
-		delta.y = sqrt(BLOCK_SIZE * BLOCK_SIZE + (ray.dir.y * ray.dir.y) / (ray.dir.x * ray.dir.x));
+		map.x = (int)(player.pos.x);
+		map.y = (int)(player.pos.y);
+		delta.x = sqrt(1 + (ray.dir.y * ray.dir.y) / (ray.dir.x * ray.dir.x));
+		delta.y = sqrt(1 + (ray.dir.x * ray.dir.x) / (ray.dir.y * ray.dir.y));
 		if (ray.dir.x < 0)
 		{
 			step.x = -1;
-			side.x = (ray.pos.x - map.x * 64) * delta.x / 64;
+			side.x = (ray.pos.x - map.x) * delta.x;
 		}
 		else
 		{
 			step.x = 1;
-			side.x = delta.x * (64 * (map.x +1) - ray.pos.x) / 64;
+			side.x = delta.x * ((map.x + 1) - ray.pos.x);
 		}
 		if (ray.dir.y < 0)
 		{
 			step.y = -1;
-			side.y = (ray.pos.y - map.x * 64) * delta.y / 64;
+			side.y = (ray.pos.y - map.y) * delta.y;
 		}
 		else
 		{
 			step.y = 1;
-			side.y = delta.y * (64 * (map.y + 1) - ray.pos.y) / 64;
+			side.y = delta.y * ((map.y + 1) - ray.pos.y);
 		}
 		touch = 0;
 		while (touch == 0)
@@ -109,17 +108,19 @@ int main (int argc, char **argv)
 				map.y += step.y;
 				side_face = 1;
 			}
-			if (map_info[(int)map.y][(int)map.x + 1])
+			if (map_info[(int)map.y][(int)map.x + 1] > 0)
 				touch = 1;
 		}
-		int perpWallDist;
-//		if (side_face == 0)
-			perpWallDist = fabs((sqrt(side.x * side.x + side.y * side.y)));//(map.x * 64 - ray.pos.x + (1 - step.x) * 32) / ray.dir.x);
-//		else
-//			perpWallDist = fabs((sqrt(side.y * side.));//(map.y * 64 - ray.pos.y + (1 - step.y) * 32) / ray.dir.y);
-
-		int lineHeight = abs((int)(WINDOW_Y / (perpWallDist)));
+		double perpWallDist;
+		if (side_face == 0)
+			perpWallDist = fabs((map.x - ray.pos.x + (1 - step.x) / 2) / ray.dir.x);
+		else
+			perpWallDist = fabs((map.y - ray.pos.y + (1 - step.y) / 2) / ray.dir.y);
+		if (perpWallDist < 0.05)
+			perpWallDist = 0.05;
 		ft_putstr("lineHeight = ");
+		ft_putstr("perpwalldist");
+		int lineHeight = abs((int)(384 / (perpWallDist)));
 		ft_putnbr(lineHeight);
 		p1.x = i;
 		p2.x = i;

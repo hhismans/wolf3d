@@ -6,7 +6,7 @@
 /*   By: hhismans <hhismans@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/12/01 15:02:07 by hhismans          #+#    #+#             */
-/*   Updated: 2014/12/01 15:07:07 by hhismans         ###   ########.fr       */
+/*   Updated: 2014/12/07 03:30:49 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,3 +57,4 @@
 #define KEY_CPAR		48
 #define KEY_MINUS		45
 #define KEY_EQUAL		61
+#define KEY_ESC			65307

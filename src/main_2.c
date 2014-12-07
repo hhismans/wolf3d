@@ -6,7 +6,7 @@
 /*   By: hhismans <hhismans@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/12/05 06:25:50 by hhismans          #+#    #+#             */
-/*   Updated: 2014/12/05 08:16:37 by hhismans         ###   ########.fr       */
+/*   Updated: 2014/12/07 03:32:31 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,26 +16,14 @@
 #include "fdf.h"
 #include "keyboard.h"
 
-int		key_hook(int keycode, t_env *e)
+void	set_vars(t_env *e, char *file)
 {
-	mlx_destroy_image(e->mlx, e->img);
-	ft_putstr("Keu :");
-	ft_putnbr(keycode);
-	if (keycode == KEY_A)
-	{
-	double oldDirX = e->v.dirx;
-			e->v.dirx = e->v.dirx * cos(-0.05) - e->v.diry * sin(-0.05);
-			e->v.diry = oldDirX * sin(-0.05) + e->v.diry * cos(-0.05);
-			double oldPlaneX = e->v.planx;
-			e->v.planx = e->v.planx * cos(-0.05) - e->v.plany * sin(-0.05);
-			e->v.plany = oldPlaneX * sin(-0.05) + e->v.plany * cos(-0.05);
-	}
-	mlx_put_image_to_window(e->mlx, e->win, e->img, 0, 0);
-	e->img = mlx_new_image(e->mlx, WX, WY);
+	int nbr_line;
 
-}
-void	set_vars(t_env *e)
-{
+	e->map = getinfo(&nbr_line, file);
+	e->mlx = mlx_init();
+	e->win = mlx_new_window(e->mlx, WX, WY, "wolf");
+	e->img = mlx_new_image(e->mlx, WX, WY);
 	e->v.posx = 5;
 	e->v.posy = 5;
 	e->v.dirx = -1;
@@ -79,6 +67,7 @@ static void		wall_hit(t_env *e)
 			wall = 1;
 	}
 }
+
 static void	comput_vars(t_env *e, int x)
 {
 	e->v.camx = ((2 * x) / (double)WX) - 1;
@@ -118,52 +107,65 @@ static void		define_side_n_step(t_env *e)
 	}
 }
 
-int main(int argc, char **argv)
+int raycaster(t_env *e, int x)
 {
-	int x;
 	int i = 0;
 	int lineHeight;
-	t_env e;
 	int nbr_line;
+	comput_vars(e, x);
+	define_side_n_step(e);
+	wall_hit(e);
+	define_walldist(e);
+	lineHeight = abs((int)(WY / (e->v.perpwalldist)));
+	//	printf("screen X = %lf\n", screenX);
+		x++;
+	return (lineHeight);
+}
+
+void update_fram(t_env *e)
+{
+	int x;
+	int lineHeight;
 	t_point p1;
 	t_point p2;
-	e.map = getinfo(&nbr_line, argv[1]);
-	e.mlx = mlx_init();
-	e.win = mlx_new_window(e.mlx, WX, WY, "wolf");
-	e.img = mlx_new_image(e.mlx, WX, WY);
-	set_vars(&e);
+
 	x = 0;
-	while (i < 1300)
-	{
+	mlx_destroy_image(e->mlx, e->img);
+	e->img = mlx_new_image(e->mlx, WX, WY);
 	while (x < WX)
 	{
-		comput_vars(&e, x);
-		define_side_n_step(&e);
-		wall_hit(&e);
-		define_walldist(&e);
-		lineHeight = abs((int)(WY / (e.v.perpwalldist)));
+		lineHeight = raycaster(e, x);
 		p1.x = x;
 		p2.x = x;
 		p1.y = WY / 2 + lineHeight / 2;
 		p2.y = WY / 2 - lineHeight / 2;
-		ft_drawline_img_c(e.img, p1, p2, rainbow_gen(x));
-		//	printf("screen X = %lf\n", screenX);
+		if (e->v.side)
+			ft_drawline_img_c(e->img, p1, p2, BLUE);//rainbow_gen(x));
+		else
+			ft_drawline_img_c(e->img, p1, p2, BLUE + 0x003300);//rainbow_gen(x));
 		x++;
 	}
-			x = 0;
-			double oldDirX = e.v.dirx;
-			e.v.dirx = e.v.dirx * cos(-0.05) - e.v.diry * sin(-0.05);
-			e.v.diry = oldDirX * sin(-0.05) + e.v.diry * cos(-0.05);
-			double oldPlaneX = e.v.planx;
-			e.v.planx = e.v.planx * cos(-0.05) - e.v.plany * sin(-0.05);
-			e.v.plany = oldPlaneX * sin(-0.05) + e.v.plany * cos(-0.05);
-			i++;
-	mlx_put_image_to_window(e.mlx, e.win, e.img, 0, 0);
-	usleep(100);
-	mlx_destroy_image(e.mlx, e.img);
-	e.img = mlx_new_image(e.mlx, WX, WY);
-	}
-	mlx_put_image_to_window(e.mlx, e.win, e.img, 0, 0);
+	mlx_put_image_to_window(e->mlx, e->win, e->img, 0, 0);
+}
+
+void rot_cam(t_env *e, double angle)
+{
+	double oldDirX;
+	double oldPlaneX;
+   
+	oldPlaneX= e->v.planx;
+	oldDirX = e->v.dirx;
+	e->v.dirx = e->v.dirx * cos(angle) - e->v.diry * sin(angle);
+	e->v.diry = oldDirX * sin(angle) + e->v.diry * cos(angle);
+	e->v.planx = e->v.planx * cos(angle) - e->v.plany * sin(angle);
+	e->v.plany = oldPlaneX * sin(angle) + e->v.plany * cos(angle);
+}
+
+int main(int argc, char **argv)
+{
+	t_env e;
+	set_vars(&e, argv[1]);
+	update_fram(&e);
 	mlx_key_hook(e.win, key_hook, &e);
 	mlx_loop(e.mlx);
 }

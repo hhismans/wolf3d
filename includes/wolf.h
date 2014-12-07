@@ -6,7 +6,7 @@
 /*   By: hhismans <hhismans@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/12/02 18:50:27 by hhismans          #+#    #+#             */
-/*   Updated: 2014/12/05 08:16:29 by hhismans         ###   ########.fr       */
+/*   Updated: 2014/12/07 04:46:06 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 #define CAMERA_ANGLE 60
 #define PLAN_HEIGHT 200
 #define PLAN_WEIGTH 320
-#define WX	780
-#define WY 400
+#define WX 512
+#define WY 384
 #define PLAYER_X 1000
 #define PLAYER_Y 500
 #define DIR_X -1
@@ -77,3 +77,4 @@ typedef struct	s_ray
 }				t_ray;
 
 int			**getinfo(int *nbr_line2, char *file);
+int		key_hook(int keycode, t_env *e);

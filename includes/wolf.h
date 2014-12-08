@@ -6,7 +6,7 @@
 /*   By: hhismans <hhismans@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/12/02 18:50:27 by hhismans          #+#    #+#             */
-/*   Updated: 2014/12/08 21:16:48 by hhismans         ###   ########.fr       */
+/*   Updated: 2014/12/08 22:30:25 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 #define CAMERA_ANGLE 60
 #define PLAN_HEIGHT 200
 #define PLAN_WEIGTH 320
-#define WX 512
-#define WY 384
+#define WX 2560
+#define WY 1440
 #define PLAYER_X 1000
 #define PLAYER_Y 500
 #define DIR_X -1

@@ -6,7 +6,7 @@
 /*   By: hhismans <hhismans@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/12/07 02:18:32 by hhismans          #+#    #+#             */
-/*   Updated: 2014/12/08 09:15:28 by hhismans         ###   ########.fr       */
+/*   Updated: 2014/12/08 17:28:01 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int		key_hook(int keycode, t_env *e)
 			i++;
 		}
 	}
-	if (keycode == KEY_D || keycode == KEYRIGHT)
+	if (keycode == KEY_D || keycode == KEY_RIGHT)
 	{
 		i = 0;
 		while (i<10)

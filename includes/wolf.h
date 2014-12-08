@@ -6,7 +6,7 @@
 /*   By: hhismans <hhismans@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/12/02 18:50:27 by hhismans          #+#    #+#             */
-/*   Updated: 2014/12/08 08:45:20 by hhismans         ###   ########.fr       */
+/*   Updated: 2014/12/08 21:16:48 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,13 @@ typedef struct	s_player
 	t_vector dir;
 }				t_player;
 
+typedef struct	s_text
+{
+	void *img;
+	int w;
+	int h;
+}				t_text;
+
 typedef struct	s_var
 {
 	double		posx;
@@ -59,6 +66,9 @@ typedef struct	s_var
 	int			stepx;
 	int			stepy;
 	int			side;
+	double		wallx;
+	int			txx;
+	int			txy;
 }				t_var;
 
 typedef struct	s_env
@@ -68,6 +78,7 @@ typedef struct	s_env
 	int			**map;
 	void		*img;
 	t_var		v;
+	t_text		tx_hitler;
 }				t_env;
 
 typedef struct	s_ray
